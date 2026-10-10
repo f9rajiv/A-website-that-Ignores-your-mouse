@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Himalayan Kettle</title>
 <link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/body_input.css">
 </head>
 <body>
 
@@ -182,6 +183,36 @@
   </div>
 </div>
 
+<div id="mouse_blocker"></div>
+<div id="body_cursor" aria-hidden="true">
+  <svg viewBox="0 0 64 64">
+    <circle class="ring_bg" cx="32" cy="32" r="26"/>
+    <circle class="ring_fg" cx="32" cy="32" r="26"/>
+    <circle class="dot" cx="32" cy="32" r="7"/>
+  </svg>
+</div>
+<div id="scroll_indicator" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<video id="webcam_feed" autoplay playsinline muted></video>
+<div id="debug_panel"></div>
+<div id="facilitator_toast"></div>
+<div id="keys_sheet"><div class="sheet"><b>Facilitator keys</b>
+
+<b>Space</b>   start participant session (recalibrate, reset timers, new session id)
+<b>R</b>       recalibrate neutral head pose (participant sits still, looks at centre)
+<b>1 2 3</b>   mode: 1 mouse, 2 head only, 3 head + hands
+<b>N</b>       start next task            <b>Enter</b>  mark current task done
+<b>H</b>       show next hint now
+<b>D</b>       debug overlay + camera thumbnail
+<b>S</b>       download CSV log
+<b>?</b>       this sheet                 <b>Esc</b>    close overlays
+
+Tasks:  1 find the price of a cinnamon bun (auto: Bakes tab opened)
+        2 zoom in on the terrace photo   (auto: photo reaches 1.8×)
+        3 order two cinnamon buns        (auto: order placed with 2)</div></div>
+
 <script src="js/site.js"></script>
+<script src="js/config.js"></script>
+<script src="js/body_input.js"></script>
 </body>
 </html>
