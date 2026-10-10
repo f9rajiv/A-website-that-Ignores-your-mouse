@@ -23,6 +23,12 @@ html.body_mode #mouse_blocker { display: block; }
 #scroll_indicator span { width: 14px; height: 14px; border-right: 3px solid var(--crimson); border-bottom: 3px solid var(--crimson); transform: rotate(45deg); }
 #scroll_indicator.is_up span { transform: rotate(-135deg); }
 
+#hint_card {
+  position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%); z-index: 58;
+  background: var(--ink); color: var(--mist); padding: 16px 24px; border: 2px solid var(--snow);
+  font-size: 18px; font-weight: bold; max-width: 560px; text-align: center; pointer-events: none; display: none;
+}
+#hint_card.is_visible { display: block; }
 
 /* Facilitator side, kept small */
 #webcam_feed { position: fixed; left: 14px; bottom: 14px; z-index: 70; width: 200px; height: auto; opacity: 0; pointer-events: none; transform: scaleX(-1); }

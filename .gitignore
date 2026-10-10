@@ -1,0 +1,6 @@
+# downloaded study logs
+*.csv
+
+# editor and OS files
+.DS_Store
+.vscode/

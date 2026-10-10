@@ -9,6 +9,12 @@
 
 const mode_names = { 1: "mouse", 2: "head", 3: "head_hands" };
 
+const tasks = [
+  { id: "t1", label: "Find the price of a cinnamon bun", auto: "bakes_tab" },
+  { id: "t2", label: "Zoom in on the mountain photo", auto: "zoom_photo_2" },
+  { id: "t3", label: "Order two cinnamon buns", auto: "order_cinnamon_bun_2" },
+];
+
 const state = {
   mode: config.start_mode,
   tracking_status: "loading",
@@ -26,6 +32,8 @@ const state = {
   scroll_started_at: 0,
   zoom: { photo: null, scale: 1, target_scale: 1, origin_x: 50, origin_y: 50, max_scale: 1 },
   session: { id: null, started_at: 0 },
+  task: { index: -1, started_at: 0 },
+  events: [],
   fps: 0,
   frame_count: 0,
   debug: false,
@@ -36,6 +44,7 @@ const el = {
   cursor: document.getElementById("body_cursor"),
   ring: document.querySelector("#body_cursor .ring_fg"),
   scroll_indicator: document.getElementById("scroll_indicator"),
+  hint: document.getElementById("hint_card"),
   video: document.getElementById("webcam_feed"),
   debug: document.getElementById("debug_panel"),
   toast: document.getElementById("facilitator_toast"),
@@ -52,6 +61,34 @@ function toast(text) {
   el.toast.classList.add("is_visible");
   clearTimeout(toast_timer);
   toast_timer = setTimeout(() => el.toast.classList.remove("is_visible"), 1800);
+}
+
+/* Event log, saved as CSV with the S key */
+function log(event, detail = "") {
+  const t = state.session.started_at ? Math.round(now_ms() - state.session.started_at) : 0;
+  state.events.push({
+    session_id: state.session.id || "none",
+    t_ms: t,
+    mode: mode_names[state.mode],
+    task: state.task.index >= 0 ? tasks[state.task.index].id : "",
+    event,
+    detail: String(detail),
+  });
+}
+
+function download_csv() {
+  const header = "session_id,t_ms,mode,task,event,detail";
+  const rows = state.events.map((e) =>
+    [e.session_id, e.t_ms, e.mode, e.task, e.event, '"' + e.detail.replace(/"/g, '""') + '"'].join(",")
+  );
+  const blob = new Blob([header + "\n" + rows.join("\n") + "\n"], { type: "text/csv" });
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  a.href = URL.createObjectURL(blob);
+  a.download = `body_cafe_log_${stamp}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast(`saved ${state.events.length} events`);
 }
 
 /* One Euro filter: steady when the head is still, responsive when it moves */
@@ -94,13 +131,19 @@ function set_mode(mode) {
     el.cursor.classList.remove("is_visible", "is_over_target");
     clear_gaze();
     set_scroll_state("none", "none");
+    hide_hint();
   }
+  log("mode_change", mode_names[mode]);
   toast(`mode: ${mode_names[mode]}`);
 }
 
 function start_session() {
   state.session = { id: "s" + Date.now().toString(36), started_at: now_ms() };
+  Object.assign(state.session, { first_click_at: null, hint_level: 0, hint_timeout: null, mouse_moves: 0, mouse_burst_logged_at: 0 });
+  state.task = { index: -1, started_at: 0 };
+  hide_hint();
   start_calibration();
+  log("session_start", `mode=${mode_names[state.mode]}`);
   toast(`session ${state.session.id} started, calibrating`);
 }
 
@@ -118,9 +161,72 @@ function finish_calibration() {
   state.neutral = { yaw: median("yaw"), pitch: median("pitch"), nx: median("nx"), ny: median("ny"), size: median("size") };
   state.calibrating = false;
   filter_x.reset(); filter_y.reset();
+  log("calibrated", `size=${state.neutral.size.toFixed(3)}`);
   toast("calibrated");
 }
 
+/* Tasks for the user study */
+function start_next_task() {
+  const next = state.task.index + 1;
+  if (next >= tasks.length) { toast("no more tasks"); return; }
+  state.task = { index: next, started_at: now_ms() };
+  log("task_start", tasks[next].label);
+  toast(`task ${next + 1}: ${tasks[next].label}`);
+}
+
+function complete_task(how) {
+  if (state.task.index < 0 || !state.task.started_at) return;
+  const duration = Math.round(now_ms() - state.task.started_at);
+  log("task_complete", `${how} duration_ms=${duration}`);
+  toast(`task ${state.task.index + 1} done in ${(duration / 1000).toFixed(1)} s (${how})`);
+  state.task.started_at = 0;
+}
+
+function check_task_auto(key) {
+  if (state.task.index < 0 || !state.task.started_at) return;
+  if (tasks[state.task.index].auto === key) complete_task("auto");
+}
+
+document.addEventListener("cafe:menu_tab", (e) => {
+  if (e.detail.tab === "bakes") check_task_auto("bakes_tab");
+});
+document.addEventListener("cafe:order_placed", (e) => {
+  const o = e.detail.order;
+  log("order_placed", Object.keys(o).filter((k) => o[k] > 0).map((k) => `${o[k]}x${k}`).join(" "));
+  if (o.cinnamon_bun === 2) check_task_auto("order_cinnamon_bun_2");
+});
+
+/* Discovery hints: shown only if nobody has found the rule yet */
+function show_hint(level) {
+  state.session.hint_level = level;
+  el.hint.textContent = config.hint_texts[level - 1];
+  el.hint.classList.add("is_visible");
+  log("hint_shown", `level=${level}`);
+  clearTimeout(state.session.hint_timeout);
+  state.session.hint_timeout = setTimeout(hide_hint, 9000);
+}
+
+function update_hints() {
+  if (state.mode === 1 || !state.session.started_at || state.session.first_click_at) return;
+  if (state.tracking_status !== "ready") return;
+  const elapsed_s = (now_ms() - state.session.started_at) / 1000;
+  let level = 0;
+  for (let i = 0; i < config.hint_times_s.length; i++) if (elapsed_s >= config.hint_times_s[i]) level = i + 1;
+  if (level > state.session.hint_level) show_hint(level);
+}
+
+/* Mouse activity is ignored by the page but counted for the log */
+document.addEventListener("mousemove", () => {
+  if (state.mode === 1) return;
+  state.session.mouse_moves++;
+  const t = now_ms();
+  if (t - state.session.mouse_burst_logged_at > 2000) {
+    state.session.mouse_burst_logged_at = t;
+    log("mouse_activity", `moves_total=${state.session.mouse_moves}`);
+  }
+});
+document.getElementById("mouse_blocker").addEventListener("click", () => log("mouse_click_ignored"));
+function hide_hint() { el.hint.classList.remove("is_visible"); }
 document.getElementById("mouse_blocker").addEventListener("wheel", (e) => e.preventDefault(), { passive: false });
 
 /* Facilitator keys */
@@ -132,6 +238,10 @@ document.addEventListener("keydown", (e) => {
   if (k === "r") { start_calibration(); toast("recalibrating, sit still"); }
   else if (k === "1" || k === "2" || k === "3") set_mode(Number(k));
   else if (k === "d") { state.debug = !state.debug; el.debug.classList.toggle("is_visible", state.debug); el.video.classList.toggle("is_visible", state.debug); }
+  else if (k === "n") start_next_task();
+  else if (e.key === "Enter") complete_task("manual");
+  else if (k === "h") show_hint(Math.min(3, state.session.hint_level + 1));
+  else if (k === "s") download_csv();
 });
 
 /* Tracking */
@@ -161,6 +271,7 @@ async function start_tracking() {
     await new Promise((resolve) => (el.video.onloadeddata = resolve));
     state.tracking_status = "ready";
     start_calibration();
+    log("tracking_ready");
     toast("tracking ready. Press Space when the participant sits down, ? for keys");
   } catch (error) {
     state.tracking_status = "error: " + (error && error.message ? error.message : error);
@@ -180,6 +291,7 @@ function process_face(result, t) {
   if (!faces || faces.length === 0) {
     if (state.face_found && t - state.face_last_seen > config.face_lost_ms) {
       state.face_found = false;
+      log("face_lost");
     }
     return;
   }
@@ -192,7 +304,7 @@ function process_face(result, t) {
   const size = dist(cheek_l, cheek_r, aspect);
   state.raw = { yaw, pitch, nx: nose.x, ny: nose.y, size };
   state.face_last_seen = t;
-  if (!state.face_found) { state.face_found = true; }
+  if (!state.face_found) { state.face_found = true; log("face_found"); }
 
   if (state.calibrating) {
     state.calibration_samples.push({ ...state.raw });
@@ -276,10 +388,12 @@ function hit_test(x, y) {
 
 function set_scroll_state(direction, source) {
   if (state.scroll_state === direction) return;
-  if (state.scroll_state !== "none")  state.scroll_state = direction;
+  if (state.scroll_state !== "none") log("scroll_stop", `${state.scroll_source} duration_ms=${Math.round(now_ms() - state.scroll_started_at)}`);
+  state.scroll_state = direction;
   state.scroll_source = source;
   state.scroll_started_at = now_ms();
-  if (direction !== "none")  el.scroll_indicator.classList.toggle("is_up", direction === "up");
+  if (direction !== "none") log("scroll_start", `${source} ${direction}`);
+  el.scroll_indicator.classList.toggle("is_up", direction === "up");
   el.scroll_indicator.classList.toggle("is_down", direction === "down");
 }
 
@@ -339,6 +453,7 @@ function update_frame(t, dt) {
   for (const node of stack) { const p = node.closest && node.closest(".gallery_photo"); if (p) { photo = p; break; } }
   update_zoom(photo, dt);
 
+  update_hints();
 }
 
 function fire_dwell_click(target, t) {
@@ -347,6 +462,12 @@ function fire_dwell_click(target, t) {
   el.cursor.classList.remove("is_clicked");
   void el.cursor.offsetWidth;
   el.cursor.classList.add("is_clicked");
+  log("dwell_click", target.dataset.target || target.tagName);
+  if (!state.session.first_click_at && state.session.started_at) {
+    state.session.first_click_at = t;
+    log("first_click", `t_ms=${Math.round(t - state.session.started_at)} hint_level=${state.session.hint_level}`);
+    hide_hint();
+  }
   target.click();
 }
 
@@ -370,6 +491,7 @@ function update_zoom(hovered_photo, dt) {
     img.style.transformOrigin = `${z.origin_x}% ${z.origin_y}%`;
     img.style.transform = `scale(${z.scale.toFixed(3)})`;
     if (z.scale > z.max_scale) z.max_scale = z.scale;
+    if (z.scale >= config.zoom_task_threshold && z.photo.dataset.photo === "2") check_task_auto("zoom_photo_2");
     if (!hovered_photo && z.scale < 1.02) release_zoom_photo();
   }
 }
@@ -380,7 +502,8 @@ function release_zoom_photo() {
   const img = z.photo.querySelector("img");
   img.style.transform = "";
   z.photo.classList.remove("is_focused");
-  if (z.max_scale > 1.05)  z.photo = null; z.scale = 1; z.max_scale = 1;
+  if (z.max_scale > 1.05) log("zoom", `photo_${z.photo.dataset.photo} max_scale=${z.max_scale.toFixed(2)}`);
+  z.photo = null; z.scale = 1; z.max_scale = 1;
 }
 
 /* Main loop */
@@ -403,7 +526,8 @@ function loop() {
       else if (state.mode !== 3) state.hand.scroll_v = 0;
     } catch (error) { console.warn(error); }
   } else if (state.tracking_status === "ready" && state.face_found && t - state.face_last_seen > config.face_lost_ms) {
-    state.face_found = false;  }
+    state.face_found = false; log("face_lost");
+  }
 
   update_frame(t, dt);
   if (state.debug) render_debug();
@@ -416,6 +540,7 @@ function render_debug() {
   const lines = [
     `status   ${state.tracking_status}   fps ${state.fps}`,
     `mode     ${mode_names[state.mode]}   session ${state.session.id || "-"}`,
+    `task     ${state.task.index >= 0 ? tasks[state.task.index].id + (state.task.started_at ? " running" : " done") : "-"}`,
     `face     ${state.face_found ? "found" : "lost"}${state.calibrating ? "  CALIBRATING " + state.calibration_samples.length : ""}`,
     `yaw      ${r.yaw.toFixed(3)}  (neutral ${n ? n.yaw.toFixed(3) : "-"})`,
     `pitch    ${r.pitch.toFixed(3)}  (neutral ${n ? n.pitch.toFixed(3) : "-"})`,
@@ -423,6 +548,7 @@ function render_debug() {
     `cursor   ${Math.round(state.cursor.x)}, ${Math.round(state.cursor.y)}  target ${state.dwell.target ? state.dwell.target.dataset.target : "-"}`,
     `hand     ${state.hand.present ? (state.hand.open ? "open" : "closed") : "none"}  y ${state.hand.y.toFixed(2)}  v ${Math.round(state.hand.scroll_v)}`,
     `scroll   ${state.scroll_state} (${state.scroll_source})`,
+    `hint     level ${state.session.hint_level}   mouse moves ${state.session.mouse_moves}   events ${state.events.length}`,
   ];
   el.debug.textContent = lines.join("\n");
 }
@@ -430,5 +556,8 @@ function render_debug() {
 /* Boot */
 set_mode(config.start_mode);
 window.body_cafe = { state, config, set_mode, start_session };   // for tuning from the console
+state.events.length = 0;
+log("page_load", navigator.userAgent);
+window.body_cafe.download_csv = download_csv;
 start_tracking();
 requestAnimationFrame(loop);

@@ -39,7 +39,15 @@ const config = {
   zoom_gain: 4.0,
   zoom_max: 2.4,
   zoom_smoothing: 0.14,
+  zoom_task_threshold: 1.8,
 
+  // Discovery hints: seconds after session start with no dwell click yet.
+  hint_times_s: [15, 30, 45],
+  hint_texts: [
+    "Psst. This page isn't listening to your mouse.",
+    "It's watching you instead. Try turning your head, slowly.",
+    "Look at a button and hold still to press it. Raise a hand to scroll.",
+  ],
 
   // Tracking sources. The library and models are loaded from the web.
   mediapipe_version: "1.0.1",
