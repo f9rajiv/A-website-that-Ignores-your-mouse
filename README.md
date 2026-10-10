@@ -20,12 +20,6 @@ Wikimedia Commons). Everything else is in this repository. Tracking runs
 entirely in the browser; the camera image is never shown on the page and
 never leaves the laptop.
 
-To serve it over HTTP instead (for example to open it from another device):
-
-    python3 -m http.server 8000
-
-and visit `http://localhost:8000`. The camera only works over `https://`,
-`localhost` or a local `file://` URL.
 
 ## Facilitator keys
 
@@ -77,7 +71,6 @@ right.
 
 ## Credits
 
-Photos from Wikimedia Commons under their Creative Commons licences; each one
-is linked from the page footer. Face and hand tracking by
+Face and hand tracking by
 [MediaPipe](https://github.com/google-ai-edge/mediapipe). The cafe is
 fictional.
