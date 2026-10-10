@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Himalayan Kettle</title>
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<nav class="site_nav">
+  <div class="wrap">
+    <a class="brand" href="#top" data-target="nav_home" data-action="scroll_to" data-arg="top">Himalayan Kettle</a>
+    <div class="nav_links">
+      <a class="nav_link" href="#menu" data-target="nav_menu" data-action="scroll_to" data-arg="menu">Menu</a>
+      <a class="nav_link" href="#gallery" data-target="nav_gallery" data-action="scroll_to" data-arg="gallery">Gallery</a>
+      <a class="nav_link" href="#visit" data-target="nav_visit" data-action="scroll_to" data-arg="visit">Visit</a>
+      <a class="nav_link" href="#order" data-target="nav_order" data-action="scroll_to" data-arg="order">Order</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero_scrim"></div>
+    <div class="wrap">
+      <p class="section_kicker">Oulu, since 2019</p>
+      <h1 class="hero_title">Mountain tea, <em>Nordic</em> mornings.</h1>
+      <p class="hero_text">A small Nepali café by the market square. Masala chai brewed the Pokhara way, buns baked before sunrise, and a wall of Annapurna photos to remind us where the tea comes from.</p>
+      <div class="hero_actions">
+        <button class="btn" data-target="hero_menu_btn" data-action="scroll_to" data-arg="menu">See the menu</button>
+        <button class="btn btn_ghost" data-target="hero_order_btn" data-action="scroll_to" data-arg="order">Order for pickup</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu">
+    <div class="wrap">
+      <p class="section_kicker">Menu</p>
+      <h2 class="section_title">What's on the board</h2>
+      <p class="section_lead">Tea is brewed in a pot, not a bag. Everything else is baked in the back room each morning. Prices include tax.</p>
+
+      <div class="menu_tabs">
+        <button class="menu_tab is_active" data-target="menu_tab_coffee" data-action="menu_tab" data-arg="coffee">Tea and coffee</button>
+        <button class="menu_tab" data-target="menu_tab_bakes" data-action="menu_tab" data-arg="bakes">Bakes</button>
+        <button class="menu_tab" data-target="menu_tab_lunch" data-action="menu_tab" data-arg="lunch">Lunch</button>
+      </div>
+
+      <div class="menu_panel is_active" data-panel="coffee">
+        <div class="menu_item"><div><span class="menu_item_name">Masala chai</span><span class="menu_item_note">Black tea, milk, ginger, cardamom</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€3.50</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Nepali milk tea</span><span class="menu_item_note">Plain and sweet, the way home makes it</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€3.00</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Filter coffee</span><span class="menu_item_note">Rotating single origin, free refill</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€2.80</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Espresso</span><span class="menu_item_note">Double, always</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€2.60</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Flat white</span><span class="menu_item_note">Whole or oat milk</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€4.20</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Hot cocoa</span><span class="menu_item_note">Dark chocolate, sea salt</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€3.90</span></div>
+      </div>
+      <div class="menu_panel" data-panel="bakes">
+        <div class="menu_item"><div><span class="menu_item_name">Cinnamon bun</span><span class="menu_item_note">Pearl sugar on top, baked at six</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€3.90</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Sel roti</span><span class="menu_item_note">Sweet rice-flour ring, fried fresh</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€2.50</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Cardamom bun</span><span class="menu_item_note">Braided, buttery</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€3.60</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Blueberry pie</span><span class="menu_item_note">Wild blueberries, vanilla sauce</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€4.50</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Rye roll and butter</span><span class="menu_item_note">Dense, dark, warm</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€2.20</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Carrot cake</span><span class="menu_item_note">Cream cheese frosting</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€4.80</span></div>
+      </div>
+      <div class="menu_panel" data-panel="lunch">
+        <div class="menu_item"><div><span class="menu_item_name">Dal bhat</span><span class="menu_item_note">Lentils, rice, seasonal vegetables, pickle</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€13.50</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Steamed momo, ten pieces</span><span class="menu_item_note">Vegetable or chicken, with tomato achar</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€11.90</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Thukpa</span><span class="menu_item_note">Noodle soup, served 11 to 2</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€11.50</span></div>
+        <div class="menu_item"><div><span class="menu_item_name">Soup of the day</span><span class="menu_item_note">Ask at the counter</span></div><span class="menu_item_dots"></span><span class="menu_item_price">€10.50</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="wrap">
+      <p class="section_kicker">Gallery</p>
+      <h2 class="section_title">A look inside</h2>
+      <p class="section_lead">Come closer. The details are the best part.</p>
+
+      <div class="gallery_grid">
+        <figure class="gallery_photo" data-photo="1" data-target="photo_1">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Masala_Chai.JPG?width=1000" alt="A cup of masala chai" loading="lazy">
+          <figcaption class="gallery_caption">Masala chai, poured hot</figcaption>
+        </figure>
+        <figure class="gallery_photo" data-photo="2" data-target="photo_2">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Annapurna_Base_camp_with_Machhapuchre_view.jpg?width=1000" alt="Annapurna base camp with Machhapuchhre in view" loading="lazy">
+          <figcaption class="gallery_caption">The view we are named after</figcaption>
+        </figure>
+        <figure class="gallery_photo" data-photo="3" data-target="photo_3">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Homemade_Finnish_korvapuusti.jpg?width=1000" alt="Homemade cinnamon buns" loading="lazy">
+          <figcaption class="gallery_caption">Cinnamon bun, still warm</figcaption>
+        </figure>
+        <figure class="gallery_photo" data-photo="4" data-target="photo_4">
+          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Barista_prepares_espresso_at_coffee_shop.jpg?width=1000" alt="A barista preparing espresso at a café counter" loading="lazy">
+          <figcaption class="gallery_caption">The counter</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap">
+      <p class="section_kicker">Visit</p>
+      <h2 class="section_title">Find us by the university square</h2>
+      <p class="section_lead">Two minutes from the University , on the corner with the car park. Bikes can lean on the rail outside.</p>
+      <div class="visit_grid">
+        <div>
+          <table class="hours_table">
+            <tr><td>Monday to Friday</td><td>7.30 to 18.00</td></tr>
+            <tr><td>Saturday</td><td>9.00 to 17.00</td></tr>
+            <tr><td>Sunday</td><td>10.00 to 16.00</td></tr>
+          </table>
+          <div class="address_block">
+            <strong>Himalayan Kettle</strong><br>
+            Tellervontie, by the university<br>
+            90570 Oulu<br>
+            <span style="color: var(--ink_soft)">hello@himalayankettle.example</span>
+         </div> 
+         <a class="btn btn_ghost map_link" href="https://www.google.com/maps/search/?api=1&query=Tellervontie+Oulu+Finland" target="_blank" rel="noopener" data-target="map_link">Open in Google Maps</a> 
+        </div> 
+        <iframe class="visit_map" src="https://www.google.com/maps?q=Tellervontie,+Oulu,+Finland&z=15&output=embed" title="Map of Tellervontie in Oulu" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> 
+      </div>
+    </div>
+  </section>
+
+  <section id="order">
+    <div class="wrap">
+      <p class="section_kicker">Order</p>
+      <h2 class="section_title">Order for pickup</h2>
+      <p class="section_lead">Pick what you'd like and we'll have it ready at the counter in about eight minutes.</p>
+      <div class="order_grid">
+        <div>
+          <div class="order_item" data-item="cinnamon_bun">
+            <div><div class="order_item_name">Cinnamon bun</div><div class="order_item_price">€3.90, pearl sugar on top</div></div>
+            <div class="stepper">
+              <button class="stepper_btn" data-target="minus_cinnamon_bun" data-action="qty" data-arg="cinnamon_bun:-1" aria-label="Fewer cinnamon buns">−</button>
+              <div class="stepper_qty" data-qty="cinnamon_bun">0</div>
+              <button class="stepper_btn" data-target="plus_cinnamon_bun" data-action="qty" data-arg="cinnamon_bun:1" aria-label="More cinnamon buns">+</button>
+            </div>
+          </div>
+          <div class="order_item" data-item="masala_chai">
+            <div><div class="order_item_name">Masala chai</div><div class="order_item_price">€3.50, with ginger and cardamom</div></div>
+            <div class="stepper">
+              <button class="stepper_btn" data-target="minus_masala_chai" data-action="qty" data-arg="masala_chai:-1" aria-label="Fewer masala chai">−</button>
+              <div class="stepper_qty" data-qty="masala_chai">0</div>
+              <button class="stepper_btn" data-target="plus_masala_chai" data-action="qty" data-arg="masala_chai:1" aria-label="More masala chai">+</button>
+            </div>
+          </div>
+          <div class="order_item" data-item="momo">
+            <div><div class="order_item_name">Steamed momo, ten pieces</div><div class="order_item_price">€11.90, with tomato achar</div></div>
+            <div class="stepper">
+              <button class="stepper_btn" data-target="minus_momo" data-action="qty" data-arg="momo:-1" aria-label="Fewer momo">−</button>
+              <div class="stepper_qty" data-qty="momo">0</div>
+              <button class="stepper_btn" data-target="plus_momo" data-action="qty" data-arg="momo:1" aria-label="More momo">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="order_summary">
+          <h3>Your order</h3>
+          <ul class="order_lines" id="order_lines"><li style="justify-content:center">Nothing yet</li></ul>
+          <div class="order_total"><span>Total</span><span id="order_total">€0.00</span></div>
+          <button class="btn btn_crimson" id="place_order_btn" data-target="place_order" data-action="place_order" disabled>Place order</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Himalayan Kettle, Tellervontie, Oulu.</p>
+    <p>Privacy: the camera is used only inside this page, in your browser. Nothing is recorded or sent anywhere.</p>
+  </div>
+</footer>
+
+<div class="modal_backdrop" id="order_modal">
+  <div class="modal">
+    <h3>Thanks!</h3>
+    <p id="order_modal_text">Your order is on its way to the counter.</p>
+    <div class="order_number" id="order_modal_number">Order #4127, ready in 8 min</div>
+    <button class="btn" data-target="modal_close" data-action="close_modal">Close</button>
+  </div>
+</div>
+
+<script src="js/site.js"></script>
+</body>
+</html>

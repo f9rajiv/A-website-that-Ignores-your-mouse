@@ -1,0 +1,140 @@
+/* Himalayan Kettle: styles for the café page itself. */
+:root {
+  --mist: #eef1f0;
+  --stone: #dde3e1;
+  --ink: #1e2a33;
+  --ink_soft: #4f5d66;
+  --crimson: #9e3a4b;
+  --crimson_deep: #7c2a3a;
+  --pine: #3a6b52;
+  --pine_deep: #2b5140;
+  --line: #c6cfcc;
+  --snow: #f8f9f8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: normal; line-height: 1.1; margin: 0; }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+.wrap { width: min(1040px, 100% - 48px); margin: 0 auto; }
+
+/* Nav */
+.site_nav { position: sticky; top: 0; z-index: 20; background: var(--mist); border-bottom: 2px solid var(--ink); }
+.site_nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { font-family: Georgia, serif; font-size: 26px; letter-spacing: 0.01em; }
+.nav_links { display: flex; gap: 4px; }
+.nav_link { display: inline-flex; align-items: center; height: 52px; padding: 0 20px; font-weight: bold; font-size: 17px; color: var(--ink_soft); border-bottom: 3px solid transparent; }
+.nav_link:hover, .nav_link.is_gazed { color: var(--ink); border-bottom-color: var(--pine); }
+
+/* Sections */
+section { padding: 88px 0; }
+section + section { border-top: 1px solid var(--line); }
+.section_kicker { font-weight: bold; color: var(--pine); letter-spacing: 0.1em; text-transform: uppercase; font-size: 13px; margin-bottom: 12px; }
+.section_title { font-size: clamp(34px, 4.4vw, 48px); margin-bottom: 14px; }
+.section_lead { color: var(--ink_soft); max-width: 58ch; font-size: 19px; }
+
+/* Hero */
+.hero {
+  position: relative; min-height: 56vh; padding: 0; display: flex; align-items: flex-end;
+  background: #2b3b48 url("https://commons.wikimedia.org/wiki/Special:FilePath/The_Annapurna_range_from_Pokhara.jpg?width=1920") center 40% / cover no-repeat; color: var(--snow);
+}
+.hero_scrim { position: absolute; inset: 0; background: rgba(20, 30, 38, 0.42); }
+.hero .wrap { position: relative; padding: 120px 0 64px; max-width: 1040px; }
+.hero .section_kicker { color: var(--stone); }
+.hero_title { font-size: clamp(46px, 6.4vw, 78px); margin-bottom: 20px; color: var(--snow); max-width: 18ch; }
+.hero_title em { font-style: italic; }
+.hero_text { font-size: 21px; color: var(--stone); max-width: 52ch; margin-bottom: 34px; }
+.hero_actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.hero .btn.btn_ghost { color: var(--snow); border-color: var(--snow); }
+.hero .btn.btn_ghost:hover, .hero .btn.btn_ghost.is_gazed { background: rgba(248, 249, 248, 0.18); }
+.hero_credit { position: absolute; right: 16px; bottom: 10px; font-size: 13px; color: var(--stone); }
+
+/* Buttons */
+.btn {
+  appearance: none; border: 2px solid var(--pine); font: inherit; font-weight: bold; font-size: 18px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 60px; padding: 0 30px; background: var(--pine); color: var(--snow);
+}
+.btn:hover, .btn.is_gazed { background: var(--pine_deep); border-color: var(--pine_deep); }
+.btn.btn_ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn.btn_ghost:hover, .btn.btn_ghost.is_gazed { background: var(--stone); }
+.btn.btn_crimson { background: var(--crimson); border-color: var(--crimson); }
+.btn.btn_crimson:hover, .btn.btn_crimson.is_gazed { background: var(--crimson_deep); border-color: var(--crimson_deep); }
+.btn:disabled { opacity: 0.45; }
+
+/* Menu */
+.menu_tabs { display: flex; gap: 10px; margin: 34px 0 26px; flex-wrap: wrap; }
+.menu_tab {
+  appearance: none; font: inherit; font-weight: bold; font-size: 18px;
+  min-height: 60px; padding: 0 28px; background: var(--snow); color: var(--ink_soft); border: 2px solid var(--line);
+}
+.menu_tab:hover, .menu_tab.is_gazed { border-color: var(--ink); color: var(--ink); }
+.menu_tab.is_active { background: var(--ink); color: var(--mist); border-color: var(--ink); }
+.menu_panel { display: none; }
+.menu_panel.is_active { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 40px; }
+.menu_item { display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.menu_item_name { font-weight: bold; font-size: 19px; }
+.menu_item_note { color: var(--ink_soft); font-size: 15px; display: block; }
+.menu_item_dots { flex: 1; border-bottom: 1px dotted var(--line); transform: translateY(-6px); }
+.menu_item_price { font-family: Georgia, serif; font-size: 22px; white-space: nowrap; }
+
+/* Gallery */
+.gallery_grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 36px; }
+.gallery_photo { position: relative; overflow: hidden; background: var(--stone); aspect-ratio: 4 / 3; border: 2px solid var(--line); }
+.gallery_photo.is_focused { border-color: var(--crimson); }
+.gallery_photo img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; transform-origin: 50% 50%; will-change: transform; }
+.gallery_caption { position: absolute; left: 14px; bottom: 12px; padding: 6px 12px; background: var(--ink); color: var(--snow); font-weight: bold; font-size: 14px; pointer-events: none; }
+
+/* Visit */
+.visit_grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 44px; margin-top: 36px; align-items: start; }
+.hours_table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 18px; }
+.hours_table td { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.hours_table td:last-child { text-align: right; font-weight: bold; }
+.visit_map { width: 100%; height: 420px; display: block; border: 2px solid var(--line); }
+.map_link { margin-top: 20px; }
+.address_block { margin-top: 26px; padding: 22px; background: var(--snow); border: 1px solid var(--line); }
+
+/* Order */
+.order_grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 44px; margin-top: 36px; align-items: start; }
+.order_item { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.order_item_name { font-weight: bold; font-size: 20px; }
+.order_item_price { color: var(--ink_soft); font-size: 16px; }
+.stepper { display: flex; align-items: center; gap: 8px; }
+.stepper_btn { appearance: none; font: inherit; font-weight: bold; font-size: 26px; line-height: 1; width: 64px; height: 64px; background: var(--snow); color: var(--ink); border: 2px solid var(--line); }
+.stepper_btn:hover, .stepper_btn.is_gazed { border-color: var(--ink); background: var(--stone); }
+.stepper_qty { width: 46px; text-align: center; font-family: Georgia, serif; font-size: 26px; }
+.order_summary { padding: 26px; background: var(--snow); border: 2px solid var(--ink); position: sticky; top: 96px; }
+.order_summary h3 { font-size: 24px; margin-bottom: 12px; }
+.order_lines { list-style: none; padding: 0; margin: 0 0 16px; min-height: 60px; color: var(--ink_soft); }
+.order_lines li { display: flex; justify-content: space-between; padding: 6px 0; }
+.order_total { display: flex; justify-content: space-between; font-weight: bold; font-size: 20px; padding-top: 12px; border-top: 2px solid var(--line); margin-bottom: 20px; }
+.order_summary .btn { width: 100%; }
+
+/* Footer */
+footer { padding: 40px 0 60px; color: var(--ink_soft); font-size: 15px; border-top: 1px solid var(--line); }
+footer p + p { margin-top: 8px; }
+footer a { text-decoration: underline; }
+
+/* Modal */
+.modal_backdrop { position: fixed; inset: 0; z-index: 40; background: rgba(30, 42, 51, 0.55); display: none; align-items: center; justify-content: center; padding: 24px; }
+.modal_backdrop.is_open { display: flex; }
+.modal { width: min(560px, 100%); background: var(--snow); border: 2px solid var(--ink); padding: 40px; text-align: center; }
+.modal h3 { font-size: 34px; margin-bottom: 10px; }
+.modal p { color: var(--ink_soft); font-size: 19px; }
+.modal .order_number { font-family: Georgia, serif; font-size: 22px; color: var(--crimson); margin: 18px 0 26px; }
+.modal .btn { min-width: 220px; }
+
+@media (max-width: 860px) {
+  .hero .wrap, .visit_grid, .order_grid, .gallery_grid { grid-template-columns: 1fr; }
+  .menu_panel.is_active { grid-template-columns: 1fr; }
+  .nav_links { gap: 0; }
+  .nav_link { padding: 0 12px; }
+  .order_summary { position: static; }
+}
